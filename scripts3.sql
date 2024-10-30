@@ -65,8 +65,10 @@ CREATE TABLE Passport(
     ExpirationOfDate DATE NOT NULL CONSTRAINT CK_ExpirationOfDate_Future CHECK (ExpirationOfDate > GETDATE()),
     IdCountryPassport INT NOT NULL,
     IdCityPassport INT NOT NULL,
-    CONSTRAINT FK_IdCountryPassport FOREIGN KEY (IdCountryPassport) REFERENCES Country(IdCountry),
+    CONSTRAINT FK_IdCountryPassport FOREIGN KEY (IdCountryPassport) REFERENCES Country(IdCountry)
+    ON DELETE SET NULL,
     CONSTRAINT FK_IdCityPassport FOREIGN KEY (IdCityPassport) REFERENCES City(IdCity)
+    ON DELETE SET NULL
 );
 
 -- Boleto
@@ -75,7 +77,7 @@ CREATE TABLE Ticket(
     Number INT NOT NULL CONSTRAINT UQ_Ticket_Number UNIQUE,
     IdCustomer INT NOT NULL,
     CONSTRAINT FK_IdCustomer_Ticket FOREIGN KEY (IdCustomer) REFERENCES Customer(IdCustomer)
-        ON DELETE CASCADE
+        ON DELETE SET NULL 
 );
 
 -- Aeropuerto
