@@ -771,6 +771,7 @@ create table DetalleReserva(
     id_AsientoDisponible INT,
     id_Reservas INT,
     descripcion VARCHAR,
+    cantidad INT,
     FOREIGN KEY (id_Reservas) REFERENCES Reservas (id_Reservas),
     FOREIGN KEY (id_AsientoDisponible) REFERENCES AsientoDisponible(id_AsientoDisponible)
 )
@@ -786,13 +787,5 @@ select * from DetalleReserva
 
  select * from AsientoDisponible
 
-create table DetalleReserva(
-    id_DetalleReserva INT IDENTITY (1,1) PRIMARY KEY,
-    id_AsientoDisponible INT,
-    id_Reservas INT,
-    descripcion VARCHAR,
-    cantidad INT,
-    FOREIGN KEY (id_Reservas) REFERENCES Reservas (id_Reservas),
-    FOREIGN KEY (id_AsientoDisponible) REFERENCES AsientoDisponible(id_AsientoDisponible)
-)
+
 
