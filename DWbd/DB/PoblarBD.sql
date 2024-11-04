@@ -1,7 +1,7 @@
-
+--tabla ModeloAeronave--
 INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Airbus A320', 100);
 INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Boeing 737-800', 120);
-
+--tabla Aeronave--
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Viento Libre', '2019-01-15', 1);
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Cielo Azul', '2019-02-20', 2);
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Estrella Fugaz', '2019-03-25', 1);
@@ -12,10 +12,268 @@ INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeron
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Brisa Celestial', '2019-08-05', 2);
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Cometa Plateado', '2019-09-17', 2);
 INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Alas de Plata', '2019-10-24', 2);
---------------procedimiento almacenado --------------------
+--tabla TipoEmpleado--
+INSERT INTO TipoEmpleado (cargo) VALUES ('Piloto');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Copiloto');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Tripulación de Cabina');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Mecánico de Aeronaves');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Controlador de Tráfico Aéreo');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Agente de Puerta');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Agente de Reservas');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Personal de Carga');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Personal de Mantenimiento de Aeropuertos');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Despachador de Vuelo');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Personal de Seguridad Aeroportuaria');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Gerente de Operaciones');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Supervisor de Logística');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Especialista en Servicios de TI');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Entrenador de Vuelo');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Instructor de Tripulación');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Personal de Servicio al Cliente');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Analista Financiero');
+INSERT INTO TipoEmpleado (cargo) VALUES ('Analista de Datos');
+---tabla Empleados---
 
 
+BULK INSERT Empleados
+FROM 'C:\Users\Lenovo\Downloads\empleados-aerolinea2.txt'
+WITH
+(
+    FIELDTERMINATOR = ',',
+    ROWTERMINATOR = '\n',
+    FIRSTROW = 2, -- Ignorar el encabezado
+    TABLOCK
+);
 
+--tabla PlanillaSueldos y tabla DetallePlanillaSueldos--
+CREATE PROCEDURE PoblarPlanillaSueldosYDetalle
+AS
+BEGIN
+    DECLARE @fecha_pago DATE = '2019-02-10';
+    DECLARE @fecha_final DATE = '2022-12-10';
+    DECLARE @monto_total INT;
+    DECLARE @id_PlanillaSueldos INT;
+    DECLARE @id_Empleado INT;
+    DECLARE @salario INT;
+
+    -- Bucle para crear una planilla mensual desde febrero de 2019 hasta diciembre de 2022
+    WHILE @fecha_pago <= @fecha_final
+    BEGIN
+        -- Inicializar el monto total para la planilla del mes actual
+        SET @monto_total = 0;
+
+        -- Insertar un registro en PlanillaSueldos con la fecha de pago actual
+        INSERT INTO PlanillaSueldos (fecha_pago, monto)
+        VALUES (@fecha_pago, 0);
+
+        -- Obtener el ID de la planilla de sueldos recién creada
+        SET @id_PlanillaSueldos = SCOPE_IDENTITY();
+
+        -- Cursor para recorrer los empleados y poblar DetallePlanillaSueldos
+        DECLARE EmpleadoCursor CURSOR FOR
+            SELECT id_Empleado, saladrio
+            FROM Empleados;
+
+        OPEN EmpleadoCursor;
+        FETCH NEXT FROM EmpleadoCursor INTO @id_Empleado, @salario;
+
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Insertar en DetallePlanillaSueldos el salario correspondiente de cada empleado
+            INSERT INTO DetallePlanillaSueldos (id_PlanillaSueldos, id_Empleado, salario)
+            VALUES (@id_PlanillaSueldos, @id_Empleado, @salario);
+
+            -- Sumar el salario al monto total de la planilla
+            SET @monto_total = @monto_total + @salario;
+
+            FETCH NEXT FROM EmpleadoCursor INTO @id_Empleado, @salario;
+        END;
+
+        CLOSE EmpleadoCursor;
+        DEALLOCATE EmpleadoCursor;
+
+        -- Actualizar el monto total en la tabla PlanillaSueldos
+        UPDATE PlanillaSueldos
+        SET monto = @monto_total
+        WHERE id_PlanillaSueldos = @id_PlanillaSueldos;
+
+        -- Avanzar al siguiente mes para el 10 de ese mes
+        SET @fecha_pago = DATEADD(MONTH, 1, @fecha_pago);
+    END;
+END;
+
+
+execute PoblarPlanillaSueldosYDetalle
+
+
+--tabla de  repuestos--
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Alerón', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Motor Turbofán', 150000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Turbina de escape', 30000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Compresor de aire', 25000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Bujía de encendido', 200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de aceite', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de combustible', 180);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Asiento de cabina', 700);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de control de vuelo', 25000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Caja de herramientas', 300);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Unidad de potencia auxiliar', 80000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Caja de cambios', 20000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de frenos', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cámara de aire', 100);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema hidráulico', 12000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Neumático', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Hélice', 10000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de deshielo', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Parabrisas', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Pantalla de navegación', 8000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Radar meteorológico', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Antena de comunicación', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de oxígeno', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Iluminación de cabina', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Panel de control de vuelo', 9000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Actuador de flaps', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Válvula de escape', 800);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Controlador de presión', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tubo de escape', 1500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de aire', 200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tanque de combustible', 10000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tornillo de fijación', 50);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Ala de repuesto', 200000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Turbina auxiliar', 70000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Paracaídas de emergencia', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Ventana de cabina', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Equipo de navegación', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de detección de hielo', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cámara de aterrizaje', 2500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Kit de emergencia', 1000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sensor de presión', 800);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de escape de emergencia', 7000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Dispositivo de iluminación de emergencia', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Palanca de mando', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de radar', 20000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cinturón de seguridad', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Módulo de comunicación', 6000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Refrigerador de cabina', 500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Receptor de GPS', 4500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de iluminación exterior', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Kit de reparación de fuselaje', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Panel de instrumentos', 12000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Botón de control de cabina', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de aviso de proximidad', 18000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Extintor de cabina', 500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cableado eléctrico', 250);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de monitoreo de combustible', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Manguera hidráulica', 400);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Unidad de presurización', 7500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de audio', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Reemplazo de fusible', 30);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Pantalla de cabina', 7000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de cabina', 300);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sensor de altitud', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Batería de respaldo', 1500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de ventilación', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Rueda de repuesto', 2500);
+INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Repuesto de amortiguador', 1200);
+
+--tablas Mantenimiento y detalleMantenimiento--
+
+
+CREATE PROCEDURE PoblarMantenimientos
+AS
+BEGIN
+    DECLARE @year INT = 2019;
+    DECLARE @fecha_mantenimiento DATE;
+    DECLARE @fecha_entrega DATE;
+    DECLARE @id_Aeronave INT;
+    DECLARE @id_Empleado INT;
+    DECLARE @cantidad INT;
+    DECLARE @id_Repuesto INT;
+    DECLARE @costo_mantenimiento INT;
+    DECLARE @id_Mantenimiento INT;
+    DECLARE @total_repuestos INT;
+    DECLARE @precio INT;
+    DECLARE @repuestos_por_mantenimiento INT;
+    
+    -- Recorre los años desde 2019 hasta 2022
+    WHILE @year <= 2022
+    BEGIN
+        -- Itera por cada aeronave registrada en la tabla Aeronave
+        DECLARE aeronave_cursor CURSOR FOR 
+        SELECT id_Aeronave FROM Aeronave;
+        
+        OPEN aeronave_cursor;
+        
+        FETCH NEXT FROM aeronave_cursor INTO @id_Aeronave;
+        
+        WHILE @@FETCH_STATUS = 0
+        BEGIN
+            -- Genera entre 4 y 7 mantenimientos para la aeronave en el año
+            DECLARE @mantenimientos_por_año INT = ABS(CHECKSUM(NEWID()) % 4) + 4;
+            
+            WHILE @mantenimientos_por_año > 0
+            BEGIN
+                -- Genera fecha de mantenimiento aleatoria en el año
+                SET @fecha_mantenimiento = DATEFROMPARTS(@year, ABS(CHECKSUM(NEWID()) % 12) + 1, ABS(CHECKSUM(NEWID()) % 28) + 1);
+                SET @fecha_entrega = DATEADD(DAY, ABS(CHECKSUM(NEWID()) % 5) + 1, @fecha_mantenimiento);
+                
+                -- Selecciona un empleado aleatorio para el mantenimiento
+                SELECT TOP 1 @id_Empleado = id_Empleado 
+                FROM Empleados 
+                ORDER BY NEWID();
+                
+                -- Inserta el mantenimiento en la tabla Mantenimientos
+                INSERT INTO Mantenimientos (fecha_mantenimiento, fecha_entrega, id_Empleado, id_Aeronave, costo_mantenimiento)
+                VALUES (@fecha_mantenimiento, @fecha_entrega, @id_Empleado, @id_Aeronave, 0);
+                
+                -- Obtiene el ID del mantenimiento insertado
+                SET @id_Mantenimiento = SCOPE_IDENTITY();
+                
+                -- Genera una cantidad aleatoria de repuestos entre 1 y 10 para el mantenimiento
+                SET @repuestos_por_mantenimiento = ABS(CHECKSUM(NEWID()) % 10) + 1;
+                SET @costo_mantenimiento = 0;
+                
+                WHILE @repuestos_por_mantenimiento > 0
+                BEGIN
+                    -- Selecciona un repuesto aleatorio de la tabla Repuesto
+                    SELECT TOP 1 @id_Repuesto = id_Repuesto, @precio = precio
+                    FROM Repuesto 
+                    ORDER BY NEWID();
+                    
+                    -- Genera una cantidad aleatoria de repuestos (entre 1 y 5)
+                    SET @cantidad = ABS(CHECKSUM(NEWID()) % 5) + 1;
+                    
+                    -- Inserta el detalle de mantenimiento
+                    INSERT INTO DetalleMantenimiento (cantidad, id_Repuesto, id_Mantenimiento)
+                    VALUES (@cantidad, @id_Repuesto, @id_Mantenimiento);
+                    
+                    -- Calcula el costo acumulado de los repuestos en el mantenimiento
+                    SET @costo_mantenimiento += @cantidad * @precio;
+                    
+                    SET @repuestos_por_mantenimiento = @repuestos_por_mantenimiento - 1;
+                END
+                
+                -- Actualiza el costo total del mantenimiento
+                UPDATE Mantenimientos
+                SET costo_mantenimiento = @costo_mantenimiento
+                WHERE id_Mantenimiento = @id_Mantenimiento;
+                
+                SET @mantenimientos_por_año = @mantenimientos_por_año - 1;
+            END
+            
+            FETCH NEXT FROM aeronave_cursor INTO @id_Aeronave;
+        END
+        
+        CLOSE aeronave_cursor;
+        DEALLOCATE aeronave_cursor;
+        
+        SET @year = @year + 1;
+    END
+END;
+ execute PoblarMantenimientos
+
+
+--tabla asientos --
 CREATE PROCEDURE PoblarAsientos
 AS
 BEGIN
@@ -66,8 +324,6 @@ END
 ------ejecutar el procedimiento ----
 execute PoblarAsientos
 
-
-select * from Asientos
 
 
 --------------------------------------
@@ -189,11 +445,9 @@ INSERT INTO Ciudad (nombre_ciudad, id_Pais) VALUES ('Pando', 16);
 
 INSERT INTO TipoVuelo (descripcion) VALUES ('nacional');
 INSERT INTO TipoVuelo (descripcion) VALUES ('internacional');
-------procedimiento de aeropuerto
 
 
-
-
+--tabla aeropuetos --
 
 CREATE PROCEDURE InsertarAeropuertos
 AS
@@ -212,6 +466,9 @@ BEGIN
 END;
 -------------------------------------
 execute InsertarAeropuertos
+
+---tabla numero de vuelos y vuelos 
+
 
 CREATE PROCEDURE PoblarNumeroVueloYVuelo
 AS
@@ -312,14 +569,8 @@ END;
  
  execute PoblarNumeroVueloYVuelo
 
- select * from Vuelo
+ --tabla asientos disponibles --
 
-
-
-
-
-
----------------------------------------------
 
  CREATE PROCEDURE PoblarAsientoDisponible
 AS
@@ -382,23 +633,23 @@ END;
 
  execute PoblarAsientoDisponible
 
- select * from AsientoDisponible
 
 
-
-
+-- tipo cliente --
 
 INSERT INTO TipoCliente (descripcion) VALUES ('economico');
 INSERT INTO TipoCliente (descripcion) VALUES ('ejecutivo');
 INSERT INTO TipoCliente (descripcion) VALUES ('premiun');
 INSERT INTO TipoCliente (descripcion) VALUES ('primera clase');
 
+--tabla tipo Documento --
+
 INSERT INTO TipoDocumento (descripcion) VALUES ('Pasaporte');
 INSERT INTO TipoDocumento (descripcion) VALUES ('DNI');
 INSERT INTO TipoDocumento (descripcion) VALUES ('Licencia de Conducir');
 INSERT INTO TipoDocumento (descripcion) VALUES ('Tarjeta de Residencia');
 
-
+--tabla docuemento de identidad --
 
 
 
@@ -458,7 +709,7 @@ END;
 
 execute PopulateIdentityDocument
 
-
+--tabla clientes --
 
 
 BULK INSERT Cliente
@@ -471,7 +722,7 @@ WITH
     TABLOCK
 );
 
-
+-- tipo de pago --
 
 INSERT INTO TipoPago(descripcion)
 VALUES 
@@ -484,11 +735,15 @@ VALUES
     ('Criptomoneda'),
     ('Pago Móvil');
 
+--tabla canal de pago--
+
 INSERT INTO CanalPago(descripcion, plataforma)
 VALUES 
     ('pago realizado', 'Mostrador'),
     ('pago realizado', 'Web'),
     ('pago realizado', 'Móvil');
+
+--tabla moneda--
 
 INSERT INTO moneda (descripcion, nombre_moneda)
 VALUES 
@@ -503,10 +758,7 @@ VALUES
     ('Dólar Canadiense', 'CAD'),
     ('Rupia India', 'INR');
 
-	
-
-
-
+-- tablas reservas y detalle de reservas--
 
 CREATE PROCEDURE PoblarReservasYDetalleReserva
     @PorcentajeAsientosReservar INT = 90  -- Porcentaje de asientos a reservar
@@ -525,6 +777,13 @@ BEGIN
     DECLARE @asientosParaEstaReserva INT;
     DECLARE @descripcion VARCHAR(100) = 'Asiento reservado';
     DECLARE @PrecioUnitario INT;
+    DECLARE @monto INT;
+    DECLARE @id_EstadoReserva INT;
+
+    -- Asigna aleatoriamente un estado para la reserva
+    SELECT TOP 1 @id_EstadoReserva = id_estadoReserva
+    FROM EstadoReserva
+    ORDER BY NEWID();
 
     -- Cursor para recorrer cada vuelo y crear reservas correspondientes
     DECLARE VueloCursor CURSOR FOR
@@ -564,12 +823,12 @@ BEGIN
             -- Reducir la cantidad de asientos restantes por la cantidad reservada en esta transacción
             SET @cantidadAsientosReserva = @cantidadAsientosReserva - @asientosParaEstaReserva;
 
-            -- Generar el PrecioUnitario aleatorio entre 100 y 500
-            SET @PrecioUnitario = ABS(CHECKSUM(NEWID()) % 601) + 200;
+            -- Calcular el monto total de la reserva
+            SET @monto = 0;
 
             -- Inserta la reserva en la tabla Reservas
-            INSERT INTO Reservas (id_Cliente, fecha_reserva, cantidad, PrecioUnitario)
-            VALUES (@id_Cliente, @fecha_reserva, @asientosParaEstaReserva, @PrecioUnitario);
+            INSERT INTO Reservas (id_Cliente, fecha_reserva, cantidad, monto, id_EstadoReserva)
+            VALUES (@id_Cliente, @fecha_reserva, @asientosParaEstaReserva, 0, @id_EstadoReserva);
             SET @id_Reserva = SCOPE_IDENTITY();
 
             -- Cursor para seleccionar aleatoriamente los asientos disponibles para esta reserva
@@ -585,8 +844,15 @@ BEGIN
             -- Insertar cada asiento reservado en DetalleReserva
             WHILE @@FETCH_STATUS = 0
             BEGIN
-                INSERT INTO DetalleReserva (id_AsientoDisponible, id_Reservas, descripcion)
-                VALUES (@id_AsientoDisponible, @id_Reserva, @descripcion);
+                -- Generar el PrecioUnitario aleatorio entre 200 y 600 para el asiento
+                SET @PrecioUnitario = ABS(CHECKSUM(NEWID()) % 401) + 200;
+
+                -- Sumar al monto total de la reserva
+                SET @monto += @PrecioUnitario;
+
+                -- Insertar el detalle de la reserva
+                INSERT INTO DetalleReserva (id_AsientoDisponible, id_Reservas, PrecioUnitario, descripcion)
+                VALUES (@id_AsientoDisponible, @id_Reserva, @PrecioUnitario, @descripcion);
 
                 -- Cambia el estado del asiento a ocupado en AsientoDisponible
                 UPDATE AsientoDisponible 
@@ -598,6 +864,11 @@ BEGIN
 
             CLOSE AsientoCursor;
             DEALLOCATE AsientoCursor;
+
+            -- Actualizar el monto total de la reserva en la tabla Reservas
+            UPDATE Reservas
+            SET monto = @monto
+            WHERE id_Reservas = @id_Reserva;
         END;
 
         FETCH NEXT FROM VueloCursor INTO @id_Vuelo, @fecha_vuelo;
@@ -612,7 +883,7 @@ END;
 execute PoblarReservasYDetalleReserva
 
 
-
+-- tabla pagos --
 
 
 
@@ -621,10 +892,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @id_Cliente INT;
     DECLARE @id_Reserva INT;
-    DECLARE @cantidad INT;
-    DECLARE @PrecioUnitario DECIMAL(10, 2);
+    DECLARE @id_Cliente INT;
     DECLARE @monto DECIMAL(10, 2);
     DECLARE @fecha_reserva DATE;
     DECLARE @fecha_pago DATE;
@@ -636,23 +905,25 @@ BEGIN
 
     -- Cursor para recorrer cada reserva y crear el pago correspondiente
     DECLARE ReservaCursor CURSOR FOR
-        SELECT id_Reservas, id_Cliente, cantidad, PrecioUnitario, fecha_reserva
-        FROM Reservas;
+        SELECT R.id_Reservas, R.id_Cliente, R.fecha_reserva
+        FROM Reservas R;
 
     OPEN ReservaCursor;
-    FETCH NEXT FROM ReservaCursor INTO @id_Reserva, @id_Cliente, @cantidad, @PrecioUnitario, @fecha_reserva;
+    FETCH NEXT FROM ReservaCursor INTO @id_Reserva, @id_Cliente, @fecha_reserva;
 
     WHILE @@FETCH_STATUS = 0
     BEGIN
-        -- Calcular el monto como PrecioUnitario * cantidad
-        SET @monto = @PrecioUnitario * @cantidad;
+        -- Calcular el monto sumando el precio unitario de los detalles de la reserva
+        SELECT @monto = SUM(DR.PrecioUnitario)
+        FROM DetalleReserva DR
+        WHERE DR.id_Reservas = @id_Reserva;
 
         -- Seleccionar aleatoriamente un tipo de pago, canal de pago y moneda
         SELECT TOP 1 @id_TipoPago = id_TipoPago FROM TipoPago ORDER BY NEWID();
         SELECT TOP 1 @id_CanalPago = id_CanalPago FROM CanalPago ORDER BY NEWID();
         SELECT TOP 1 @id_Moneda = id_Moneda FROM Moneda ORDER BY NEWID();
 
-        -- Generar una fecha de pago dentro de 1 a 3 días después de la fecha de reserva
+        -- Generar una fecha de pago entre 1 a 3 días después de la fecha de reserva
         SET @fecha_pago = DATEADD(DAY, ABS(CHECKSUM(NEWID()) % 3 + 1), @fecha_reserva);
 
         -- Generar un valor aleatorio para establecer el estatus con la probabilidad deseada
@@ -668,7 +939,7 @@ BEGIN
         INSERT INTO Pago (id_Cliente, id_TipoPago, id_CanalPago, id_Moneda, id_Reservas, monto, fecha_pago, estatus)
         VALUES (@id_Cliente, @id_TipoPago, @id_CanalPago, @id_Moneda, @id_Reserva, @monto, @fecha_pago, @estatus);
 
-        FETCH NEXT FROM ReservaCursor INTO @id_Reserva, @id_Cliente, @cantidad, @PrecioUnitario, @fecha_reserva;
+        FETCH NEXT FROM ReservaCursor INTO @id_Reserva, @id_Cliente, @fecha_reserva;
     END;
 
     CLOSE ReservaCursor;
@@ -676,11 +947,13 @@ BEGIN
 END;
 
 
+
 execute PoblarPagos
 
 
+--tabla Plan de Vuelos--
 
----------------------------------------------------------------------------------
+
 
 CREATE PROCEDURE PoblarPlanVuelo
 AS
@@ -728,7 +1001,3 @@ END;
 
 
 execute PoblarPlanVuelo
-
-
-select * from Vuelo
-select * from PlanVuelo
