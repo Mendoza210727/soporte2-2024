@@ -1,17 +1,33 @@
 --tabla ModeloAeronave--
-INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Airbus A320', 100);
-INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Boeing 737-800', 120);
+INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Airbus A320', 180);
+INSERT INTO ModeloAeronave (modelo, cantidad_asientos) VALUES ('Boeing 737-800', 150);
+
+--tabla Aeroinea --
+INSERT INTO Aerolinea(nombre_aerolinea) VALUES ('United Airlines');
+INSERT INTO Aerolinea(nombre_aerolinea) VALUES ('JetSmart');
+INSERT INTO Aerolinea(nombre_aerolinea) VALUES ('American Airlines');
+--tabla estado reserva --
+INSERT INTO EstadoReserva(estado_reserva)VALUES('Reservado');
+INSERT INTO EstadoReserva(estado_reserva)VALUES('Cancelado');
+
+--tabla motivo de pago--
+INSERT INTO MotivoPago(motivo_pago)VALUES('Reserva');
+INSERT INTO MotivoPago(motivo_pago)VALUES('Equipaje');
+INSERT INTO MotivoPago(motivo_pago)VALUES('alimentos');
+INSERT INTO MotivoPago(motivo_pago)VALUES('encomienda');
+
+
 --tabla Aeronave--
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Viento Libre', '2019-01-15', 1);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Cielo Azul', '2019-02-20', 2);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Estrella Fugaz', '2019-03-25', 1);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Horizonte Infinito', '2019-04-10', 1);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Espíritu Aventurero', '2019-05-30', 1);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Alas del Viento', '2019-06-15', 1);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Nave Dorada', '2019-07-20', 2);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Brisa Celestial', '2019-08-05', 2);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Cometa Plateado', '2019-09-17', 2);
-INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave) VALUES ('Alas de Plata', '2019-10-24', 2);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Viento Libre', '2019-01-15', 1, 1);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Cielo Azul', '2019-02-20', 2, 1);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Estrella Fugaz', '2019-03-25', 1, 1);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Horizonte Infinito', '2019-04-10', 1, 2);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Espíritu Aventurero', '2019-05-30', 1, 2);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Alas del Viento', '2019-06-15', 1, 3);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Nave Dorada', '2019-07-20', 2, 3);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Brisa Celestial', '2019-08-05', 2, 3);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Cometa Plateado', '2019-09-17', 2, 3);
+INSERT INTO Aeronave (nombre_comercial, fecha_inicio_operaciones, id_ModeloAeronave,id_Aerolinea) VALUES ('Alas de Plata', '2019-10-24', 2, 3);
 --tabla TipoEmpleado--
 INSERT INTO TipoEmpleado (cargo) VALUES ('Piloto');
 INSERT INTO TipoEmpleado (cargo) VALUES ('Copiloto');
@@ -106,75 +122,86 @@ END;
 execute PoblarPlanillaSueldosYDetalle
 
 
+--tabla proveedor--
+INSERT INTO Proveedor(nombre_proveedor)VALUES('AeroParts Global');
+INSERT INTO Proveedor(nombre_proveedor)VALUES('SkySupplies Aviation');
+INSERT INTO Proveedor(nombre_proveedor)VALUES('FlyTech Components');
+INSERT INTO Proveedor(nombre_proveedor)VALUES('JetSpare Solutions');
+INSERT INTO Proveedor(nombre_proveedor)VALUES('AviaParts Express');
+
 --tabla de  repuestos--
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Alerón', 5000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Motor Turbofán', 150000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Turbina de escape', 30000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Compresor de aire', 25000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Bujía de encendido', 200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de aceite', 150);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de combustible', 180);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Asiento de cabina', 700);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de control de vuelo', 25000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Caja de herramientas', 300);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Unidad de potencia auxiliar', 80000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Caja de cambios', 20000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de frenos', 15000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cámara de aire', 100);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema hidráulico', 12000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Neumático', 1200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Hélice', 10000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de deshielo', 4000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Parabrisas', 5000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Pantalla de navegación', 8000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Radar meteorológico', 15000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Antena de comunicación', 2000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de oxígeno', 4000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Iluminación de cabina', 1200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Panel de control de vuelo', 9000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Actuador de flaps', 3000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Válvula de escape', 800);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Controlador de presión', 2000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tubo de escape', 1500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de aire', 200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tanque de combustible', 10000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Tornillo de fijación', 50);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Ala de repuesto', 200000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Turbina auxiliar', 70000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Paracaídas de emergencia', 3000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Ventana de cabina', 1200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Equipo de navegación', 15000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de detección de hielo', 5000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cámara de aterrizaje', 2500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Kit de emergencia', 1000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sensor de presión', 800);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de escape de emergencia', 7000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Dispositivo de iluminación de emergencia', 1200);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Palanca de mando', 3000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de radar', 20000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cinturón de seguridad', 150);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Módulo de comunicación', 6000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Refrigerador de cabina', 500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Receptor de GPS', 4500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de iluminación exterior', 3000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Kit de reparación de fuselaje', 2000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Panel de instrumentos', 12000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Botón de control de cabina', 150);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de aviso de proximidad', 18000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Extintor de cabina', 500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Cableado eléctrico', 250);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de monitoreo de combustible', 5000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Manguera hidráulica', 400);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Unidad de presurización', 7500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de audio', 2000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Reemplazo de fusible', 30);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Pantalla de cabina', 7000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Filtro de cabina', 300);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sensor de altitud', 4000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Batería de respaldo', 1500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Sistema de ventilación', 2000);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Rueda de repuesto', 2500);
-INSERT INTO Repuesto (nombre_repuesto, precio) VALUES ('Repuesto de amortiguador', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Alerón', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Motor Turbofán', 150000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Turbina de escape', 30000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Compresor de aire', 25000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Bujía de encendido', 200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Filtro de aceite', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Filtro de combustible', 180);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Asiento de cabina', 700);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de control de vuelo', 25000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Caja de herramientas', 300);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Unidad de potencia auxiliar', 80000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Caja de cambios', 20000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de frenos', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Cámara de aire', 100);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema hidráulico', 12000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Neumático', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Hélice', 10000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de deshielo', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Parabrisas', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Pantalla de navegación', 8000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Radar meteorológico', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Antena de comunicación', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de oxígeno', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Iluminación de cabina', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Panel de control de vuelo', 9000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Actuador de flaps', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Válvula de escape', 800);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Controlador de presión', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Tubo de escape', 1500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Filtro de aire', 200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Tanque de combustible', 10000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Tornillo de fijación', 50);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Ala de repuesto', 200000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Turbina auxiliar', 70000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Paracaídas de emergencia', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Ventana de cabina', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Equipo de navegación', 15000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de detección de hielo', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Cámara de aterrizaje', 2500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Kit de emergencia', 1000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sensor de presión', 800);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de escape de emergencia', 7000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Dispositivo de iluminación de emergencia', 1200);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Palanca de mando', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de radar', 20000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Cinturón de seguridad', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Módulo de comunicación', 6000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Refrigerador de cabina', 500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Receptor de GPS', 4500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de iluminación exterior', 3000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Kit de reparación de fuselaje', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Panel de instrumentos', 12000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Botón de control de cabina', 150);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de aviso de proximidad', 18000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Extintor de cabina', 500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Cableado eléctrico', 250);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de monitoreo de combustible', 5000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Manguera hidráulica', 400);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Unidad de presurización', 7500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de audio', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Reemplazo de fusible', 30);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Pantalla de cabina', 7000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Filtro de cabina', 300);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sensor de altitud', 4000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Batería de respaldo', 1500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Sistema de ventilación', 2000);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Rueda de repuesto', 2500);
+INSERT INTO Repuesto (nombre_repuesto, precio, id_Proveedor) VALUES ('Repuesto de amortiguador', 1200);
+--tabla Tipo Mantenimientp--
+INSERT INTO TipoMantenimiento(tipo_mantenimiento) VALUES ('Preventivo');
+INSERT INTO TipoMantenimiento(tipo_mantenimiento) VALUES ('Correctivo');
+INSERT INTO TipoMantenimiento(tipo_mantenimiento) VALUES ('Rutinario');
 
 --tablas Mantenimiento y detalleMantenimiento--
 
@@ -497,7 +524,7 @@ BEGIN
         ('United Airlines');
     
     -- Total de registros a insertar
-    DECLARE @totalRegistros INT = 2160;
+    DECLARE @totalRegistros INT = 2160;--5 vuelos diarios
 
     WHILE @contador < @totalRegistros
     BEGIN
@@ -540,7 +567,7 @@ BEGIN
         ORDER BY NEWID();
 
         -- Generar la fecha del vuelo aleatoria entre 2019 y 2022
-        SET @fecha_vuelo = DATEADD(DAY, ABS(CHECKSUM(NEWID()) % 730), '2020-01-01');  -- 1461 días para cubrir 4 años
+        SET @fecha_vuelo = DATEADD(DAY, ABS(CHECKSUM(NEWID()) % 360), '2019-01-01');  -- 1461 días para cubrir 4 años
 
         -- Generar hora de embarque, 1 hora antes de la hora_salida
         SET @hora_embarque = DATEADD(HOUR, -1, @hora_salida);
@@ -567,7 +594,12 @@ END;
 
 
  
- execute PoblarNumeroVueloYVuelo
+ execute PoblarNumeroVueloYVuelo\
+ --tabla Tripulacion--
+
+
+
+
 
  --tabla asientos disponibles --
 
