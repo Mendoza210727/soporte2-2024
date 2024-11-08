@@ -866,6 +866,7 @@ INSERT INTO TipoCliente (descripcion) VALUES ('economico');
 INSERT INTO TipoCliente (descripcion) VALUES ('ejecutivo');
 INSERT INTO TipoCliente (descripcion) VALUES ('premiun');
 INSERT INTO TipoCliente (descripcion) VALUES ('primera clase');
+INSERT INTO TipoCliente (descripcion) VALUES ('Platinium');
 
 
 
